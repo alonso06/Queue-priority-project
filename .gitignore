@@ -1,0 +1,16 @@
+# Compilador
+.vscode
+__pycache__/
+
+# Entorno
+.env
+.venv/
+
+# pyenv
+.python-version
+
+# Mypy
+.mypy_cache/
+
+# Otros
+todo.md
