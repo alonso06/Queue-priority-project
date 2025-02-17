@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import Queue, Server
+    from src.infrastructure.models import Queue, Server
 
 class ServerQueue(SQLModel, table=True):
     id: uuid.UUID = Field(

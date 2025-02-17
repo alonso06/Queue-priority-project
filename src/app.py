@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.config import Settings
 from src.database import create_db_and_tables
+from src import api as APIRouter
 
 
 # TODO:Agregar logger paquete loggin
@@ -11,7 +12,6 @@ async def lifespan(app: FastAPI):
     yield
 
 
-# TODO: include_route
 def create_app(settings: Settings):
     app = FastAPI(
         title=settings.PROJECT_NAME,
@@ -20,7 +20,7 @@ def create_app(settings: Settings):
         description=settings.DESCRIPTION,
         lifespan=lifespan
     )
-
-    # app.include_router(public_api)
+    
+    app.include_router(APIRouter)
 
     return app

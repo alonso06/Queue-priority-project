@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import UserType, Server
+    from src.infrastructure.models import UserType, Server
 
 class User(SQLModel, table=True):
     id: uuid.UUID = Field(

@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from datetime import datetime
 
 @dataclass
-class UserType():
+class SeverQueue:
     id: uuid.UUID
-    name: str
+    queue_id: uuid.UUID
+    server_id: uuid.UUID
     created_date: datetime
-    state: bool = True
     updated_date: datetime | None = None

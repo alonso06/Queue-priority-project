@@ -5,14 +5,15 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import ServerQueue, QueueDetail, QueuePriority
+    from src.infrastructure.models import ServerQueue, QueueDetail, QueuePriority
 
 class Queue(SQLModel, table=True):
     id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         primary_key=True
     )
-    size: int
+    name: str = Field(max_length=20)
+    size: int | None = Field(nullable=True)
     state: bool = Field(default=True)
     created_date: datetime = Field(default=datetime.now)
     updated_date: datetime | None = Field(nullable=True)

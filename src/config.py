@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from typing import Literal
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from src.infraestructure.models import *
+from src.infrastructure.models import *
 
 load_dotenv()
 

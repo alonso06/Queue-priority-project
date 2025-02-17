@@ -1,8 +1,13 @@
+import uuid
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
 @dataclass
 class Customer:
-    priority_id: str
-    order_number: Optional[str] = None
+    id: uuid.UUID
+    priority_id: uuid.UUID
+    order_number: str | None
+    created_date: datetime
+    updated_date: datetime | None = None
     

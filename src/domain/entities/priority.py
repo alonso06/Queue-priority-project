@@ -1,7 +1,12 @@
+import uuid
 from dataclasses import dataclass
+from datetime import datetime
 
 @dataclass
 class Priority:
-    name:str
-    description:str
-    state:bool    
+    id: uuid.UUID
+    name: str
+    description: str
+    created_date: datetime
+    state: bool=True
+    updated_date: datetime | None = None  

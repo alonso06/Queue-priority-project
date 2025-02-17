@@ -1,0 +1,1 @@
+from src.application.use_cases.user_type_use_case import UserTypeUseCase

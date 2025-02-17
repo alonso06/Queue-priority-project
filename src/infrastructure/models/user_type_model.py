@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import User
+    from src.infrastructure.models import User
 
 class UserType(SQLModel, table=True):
     id: uuid.UUID = Field(

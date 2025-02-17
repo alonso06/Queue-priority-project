@@ -1,28 +1,28 @@
 import uuid
 
 from sqlmodel import SQLModel, Field, Relationship
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import TEXT
 from sqlalchemy import Column
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import QueuePriority, Customer
+    from src.infrastructure.models import User, ServerQueue
 
-class Priority(SQLModel, table=True):
+class Server(SQLModel, table=True):
     id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         primary_key=True
     )
-    name: str = Field(max_length=80)
+    name: str = Field(max_length=20)
     description: str = Field(sa_column=Column(TEXT))
-    state: bool = Field(default=True)
     created_date: datetime = Field(default=datetime.now)
     updated_date: datetime | None = Field(nullable=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id")
     
-    customers: list["Customer"] = Relationship(
-        back_populates="priorities"
+    users: "User" = Relationship(
+        back_populates="servers"
     )
-    queue_priorities: list["QueuePriority"] = Relationship(
-        back_populates="priorities"
+    server_queues: list["ServerQueue"] = Relationship(
+        back_populates="servers"
     )

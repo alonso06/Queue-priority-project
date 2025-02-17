@@ -5,14 +5,14 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.infraestructure.models import Priority, QueueDetail
-
+    from src.infrastructure.models import Priority, QueueDetail
+# Todo: cambiar order_number int por str
 class Customer(SQLModel, table=True):
     id: int | None = Field(
         default=None, 
         primary_key=True
     )
-    order_number: int = Field(index=True)
+    order_number: str = Field(index=True)
     created_date: datetime = Field(default=datetime.now)
     updated_date: datetime | None = Field(nullable=True)   
     priority_id: uuid.UUID = Field(

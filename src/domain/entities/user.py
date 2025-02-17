@@ -1,11 +1,14 @@
-from dataclasses import dataclass
+import uuid
 from datetime import datetime
+from dataclasses import dataclass
 
 @dataclass
 class User():
-    user_type_id: str
+    id: uuid.UUID
+    user_name: str
     first_name: str
     last_name: str
-    birthdate: datetime
-    state: bool = True
-    
+    state: bool
+    user_type_id: uuid.UUID
+    created_date: datetime
+    updated_date: datetime | None = None
