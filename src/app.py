@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.config import Settings
-from src.database import create_db_and_tables
+from src.database import create_db_and_tables, drop_db
 from src import api as APIRouter
 
 

@@ -1,10 +1,10 @@
 import uuid
-from dataclasses import dataclass
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 
-# TODO: agregar validación segun erro
+# TODO: agregar validación segun error
 class ViewUserType(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
@@ -14,11 +14,8 @@ class ViewUserType(BaseModel):
     created_date: datetime
     updated_date: datetime | None = Field(default=None)
         
-    
-
 class UserTypeCreate(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    
+    model_config = ConfigDict(from_attributes=True)  
     name: str
     state: bool = Field(default=True)
     
@@ -27,3 +24,4 @@ class UserTypeUpdate(BaseModel):
     
     name: str | None
     state: bool | None
+    updated_date: datetime | None = Field(default=datetime.now())

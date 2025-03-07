@@ -2,10 +2,10 @@ import uuid
 
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from src.infrastructure.models import UserType, Server
+    from src.infrastructure.models import UserType, Queue
 
 class User(SQLModel, table=True):
     id: uuid.UUID = Field(
@@ -19,9 +19,10 @@ class User(SQLModel, table=True):
     updated_date: datetime | None = Field(nullable=True)
     user_type_id: uuid.UUID = Field(foreign_key="usertype.id")
     
-    user_types: "UserType" = Relationship(
-        back_populates="users"
+    queue: Optional["Queue"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={'uselist': False},
     )
-    servers: list["Server"] = Relationship(
+    user_types: "UserType" = Relationship(
         back_populates="users"
     )

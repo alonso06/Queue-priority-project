@@ -8,7 +8,7 @@ class Queue:
     id: uuid.UUID
     name: str
     created_date: datetime
-    size: int | None = None
+    user_id:uuid.UUID    
     state: bool = True
     updated_date: datetime | None = None
     

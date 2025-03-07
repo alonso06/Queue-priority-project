@@ -1,17 +1,19 @@
+# mypy: disable-error-code="attr-defined"
+from datetime import datetime
 from typing import Sequence, Type, Generic, TypeVar
+from fastapi import HTTPException
 from sqlmodel import Session, select
 
-
-T = TypeVar("T") # Model
+M = TypeVar("M") # Model
 P = TypeVar("P") # Schema
 E = TypeVar("E") # Entity
 
 # TODO: falta implementar manejo de errores
-class BaseRepository( Generic[T, P, E] ):
+class BaseRepository( Generic[M, P, E] ):
     
     def __init__(self, 
                  db: Session, 
-                 model: Type[T],
+                 model: Type[M],
                  schema_pd: Type[P],
                  entity_class: Type[E]
         ):
@@ -29,47 +31,49 @@ class BaseRepository( Generic[T, P, E] ):
     def get_by_id(self,
                   id: str,
         ) -> E:
-        query = select(self.model).where(self.model.id == id) # type: ignore
-        obj_model = self.db.exec(query).one()
-        obj_schema = self.schema_pd.model_validate(obj_model) # type: ignore
+        obj_model = self.db.get(self.model, id)
+        obj_schema = self.schema_pd.model_validate(obj_model) 
         return self.entity_class(**obj_schema.model_dump())
     
-    # obj_data es un entidad validad con su schema en el caso de uso
+    # obj_data es un modelo, validado con su schema en el caso de uso
     def create(self, 
-               obj_data: E,
+               obj_data: M,
         ) -> E :
         self.db.add(obj_data)
         self.db.commit()
         self.db.refresh(obj_data)
-        return obj_data
-        
+        return self.entity_class(**obj_data.model_dump())
     
     def update(self, 
                id: str, 
-               updated_data: E,
+               updated_data: M,
                
         ) -> E:
         
-        obj_data = self.get_by_id(id)
+        obj_model:M|None = self.db.get(self.model, id)
+        if not obj_model:
+            raise HTTPException(status_code=404, detail="Hero not found")
         
-        for key, value in updated_data.dict(exclude_unset=True).items(): # type: ignore
-            if hasattr(obj_data, key):
-                setattr(obj_data,key, value)
+        obj_data:dict = updated_data.model_dump(exclude_unset=True) # type: ignore
+        obj_model.sqlmodel_update(obj_data) # type: ignore
         
-        self.db.add(obj_data)
+        self.db.add(obj_model)
         self.db.commit()
-        self.db.refresh(obj_data)        
-        return obj_data
-        
+        self.db.refresh(obj_model)        
+        return self.entity_class(**obj_model.model_dump()) # type: ignore
+    
+    # *Importante: updated_date se actualiza en: db y backend  
     def unsubscribe(self,
                     id: str
         ) -> None:  
-        obj_data = self.get_by_id(id)
+        obj_model:M|None = self.db.get(self.model, id)
         try:
-            obj_data.state = False # type: ignore
-            self.db.add(obj_data)
+
+            obj_model.updated_date = datetime.now() # type: ignore
+            obj_model.state = False # type: ignore
+            self.db.add(obj_model)
             self.db.commit()
-            self.db.refresh(obj_data)
+            self.db.refresh(obj_model)
         
         except Exception as err:    
             self.db.rollback()
@@ -77,8 +81,9 @@ class BaseRepository( Generic[T, P, E] ):
         
     def delete(self, 
                id: str) -> dict[str, bool]:
-        obj_data = self.get_by_id(id)
-        self.db.delete(obj_data)
+        
+        obj_model:M|None = self.db.get(self.model, id)
+        self.db.delete(obj_model)
         self.db.commit()
         
         return {"ok": True}

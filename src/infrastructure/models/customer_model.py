@@ -6,19 +6,20 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.infrastructure.models import Priority, QueueDetail
-# Todo: cambiar order_number int por str
 class Customer(SQLModel, table=True):
     id: int | None = Field(
         default=None, 
         primary_key=True
     )
-    order_number: str = Field(index=True)
+    dni: str | None = Field(nullable=True, max_length=8, 
+                            unique=True)
+    state: bool = Field(default=True)
     created_date: datetime = Field(default=datetime.now)
     updated_date: datetime | None = Field(nullable=True)   
     priority_id: uuid.UUID = Field(
         foreign_key="priority.id"
     )
-    
+
     priorities: "Priority" = Relationship(
         back_populates="customers"
     )

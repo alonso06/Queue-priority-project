@@ -2,10 +2,12 @@ import uuid
 
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from src.infrastructure.models import ServerQueue, QueueDetail, QueuePriority
+    from src.infrastructure.models import (User, 
+                                           QueueDetail, 
+                                           QueuePriority)
 
 class Queue(SQLModel, table=True):
     id: uuid.UUID = Field(
@@ -13,14 +15,15 @@ class Queue(SQLModel, table=True):
         primary_key=True
     )
     name: str = Field(max_length=20)
-    size: int | None = Field(nullable=True)
     state: bool = Field(default=True)
     created_date: datetime = Field(default=datetime.now)
     updated_date: datetime | None = Field(nullable=True)
-    
-    server_queues: list["ServerQueue"] = Relationship(
-        back_populates="queues"
-    )
+    user_id: uuid.UUID | None = Field(default=None, 
+                                      unique=True, 
+                                      foreign_key="user.id")
+    user: Optional["User"] = Relationship(
+        back_populates="queue"
+    ) 
     queue_detail: list["QueueDetail"] = Relationship(
         back_populates="queues"
     )

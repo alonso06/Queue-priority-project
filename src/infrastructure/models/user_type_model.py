@@ -13,7 +13,7 @@ class UserType(SQLModel, table=True):
         primary_key=True)
     name: str = Field(max_length=50)
     state: bool = Field(default=True)
-    created_date: datetime = Field(default=datetime.now)
-    updated_date: datetime | None = Field(nullable=True)
+    created_date: datetime = Field(default=datetime.now())
+    updated_date: datetime | None = Field(default=None,nullable=True)
     
     users: list["User"] = Relationship(back_populates="user_types")
